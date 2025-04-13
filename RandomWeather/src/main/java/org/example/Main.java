@@ -10,13 +10,20 @@ public class Main {
 
         Map<String, String> weatherInCity = new HashMap<String, String>();
         while (true) {
+            System.out.println("Введите название города:");
             String city = terminalInput.nextLine();
-            if (!checkCityName(city)) throw new WrongCityNameException();
-            if (!weatherInCity.containsKey(city)) {
-                String cityWeather = GetRandomWeather(random);
-                weatherInCity.put(city, cityWeather);
+            try {
+                if (!checkCityName(city)) throw new WrongCityNameException();
+                if (!weatherInCity.containsKey(city)) {
+                    String cityWeather = GetRandomWeather(random);
+                    weatherInCity.put(city, cityWeather);
+                }
+                System.out.println(weatherInCity.get(city));
+            } catch (WrongCityNameException e) {
+                System.out.println("\u001B[33m" + "Некорректный запрос. \nНазвание города должно состоять только из символов кириллицы." + "\u001B[0m");
+            } finally {
+                System.out.println();
             }
-            System.out.println(weatherInCity.get(city) + "\n");
         }
     }
 
