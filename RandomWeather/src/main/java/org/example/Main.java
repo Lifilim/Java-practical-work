@@ -1,7 +1,6 @@
 package org.example;
 
 import java.util.*;
-import java.sql.Time;
 
 public class Main {
     public static void main(String[] args) {
@@ -27,7 +26,7 @@ public class Main {
         }
     }
 
-    private static boolean checkCityName(String cityName) {  // передается по ссылке, т.е. тот же random, что и передаваемый
+    private static boolean checkCityName(String cityName) {
         for (char ci : cityName.toCharArray())      // не оптимально, т.к. создается лишний статический массив, но разок можно и попробовать ;D
             if ((ci < 'А' || 'Я' < ci) && (ci < 'а' || 'я' < ci)) return false;
         return true;
@@ -49,14 +48,12 @@ public class Main {
         };
         int delta = 5;
         int id = random.nextInt(temperaturesBounds.length);
-        int temperature = temperaturesBounds[id][0] - delta +
+        return temperaturesBounds[id][0] - delta +
                 random.nextInt(temperaturesBounds[id][1] - temperaturesBounds[id][0] + 2 + 2 * delta);
-        return temperature;
     }
     private static String GetRandomWeather(Random random) {
         String[] weathers = {"sunny", "cloudy", "foggy", "chance of precipitation"};
-        Integer temperature = getRandomTemperature(random);
-        String weather = temperature.toString() + "°C, " + weathers[random.nextInt(weathers.length)];
-        return weather;
+        int temperature = getRandomTemperature(random);
+        return Integer.toString(temperature) + "°C, " + weathers[random.nextInt(weathers.length)];
     }
 }
