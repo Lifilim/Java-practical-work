@@ -3,17 +3,15 @@ package org.example;
 import org.example.exceptions.NoInfoAboutSuchCityException;
 import org.example.exceptions.WrongCityNameException;
 
-import org.example.services.SomeWeatherService;
-import org.example.services.impl.SomeWeatherServiceImpl;
-
-import org.example.City;
+import org.example.services.WeatherService;
+import org.example.services.impl.WeatherServiceImpl;
 
 import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
         try (Scanner terminalInput = new Scanner(System.in)) {
-            SomeWeatherService weatherService = new SomeWeatherServiceImpl();
+            WeatherService weatherService = new WeatherServiceImpl();
             while (true) {
                 System.out.println("Введите название города:");
                 try {

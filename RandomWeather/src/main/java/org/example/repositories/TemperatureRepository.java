@@ -1,5 +1,5 @@
 package org.example.repositories;
 
-public interface SomeTemperatureRepository {
+public interface TemperatureRepository {
     int getTemperature();
 }

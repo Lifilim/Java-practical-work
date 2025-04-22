@@ -2,12 +2,12 @@ package org.example.repositories.impl;
 
 import org.example.City;
 import org.example.exceptions.NoInfoAboutSuchCityException;
-import org.example.repositories.SomeWeatherRepository;
+import org.example.repositories.WeatherRepository;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class SomeWeatherRepositoryImpl implements SomeWeatherRepository {
+public class WeatherRepositoryImpl implements WeatherRepository {
     private static final Map<City, String> weatherInCityData = new HashMap<>();
 
     @Override

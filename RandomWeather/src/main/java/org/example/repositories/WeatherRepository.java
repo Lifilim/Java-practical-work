@@ -2,7 +2,7 @@ package org.example.repositories;
 
 import org.example.City;
 
-public interface SomeWeatherRepository {
+public interface WeatherRepository {
     boolean containsCity(City city);
     void addCity(City city, String cityWeather);
     String getCityWeather(City city);
