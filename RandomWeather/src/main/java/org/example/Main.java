@@ -24,23 +24,6 @@ import java.sql.Statement;
 
 public class Main {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
-            String url="jdbc:postgresql://localhost:5432/weather";
-            String user="lim";
-            String password="milmil";
-
-            try(Connection connection = DriverManager.getConnection(url, user, password)) {
-                Statement statement = connection.createStatement();
-                InputStream sqlInitial = Main.class
-                        .getClassLoader()
-                        .getResourceAsStream("sql/schema.sql");
-                assert sqlInitial != null;
-                String sql = new String(sqlInitial.readAllBytes(), StandardCharsets.UTF_8);
-                statement.execute(sql);
-                System.out.println("подключились!");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
 
         try (Scanner terminalInput = new Scanner(System.in)) {
             WeatherService weatherService = new WeatherServiceImpl();
@@ -60,6 +43,7 @@ public class Main {
             }
         } catch (Exception e) {
             System.out.println("\u001B[3mКакая-то ошибка ¯\\_(ツ)_/¯\u001B[0m");
+            System.out.println("\u001B[33m" + e.getMessage() + "\u001B[0m");
         }
     }
 

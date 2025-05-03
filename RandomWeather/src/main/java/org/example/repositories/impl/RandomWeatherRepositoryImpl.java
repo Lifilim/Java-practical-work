@@ -7,7 +7,7 @@ import org.example.repositories.WeatherRepository;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WeatherRepositoryImpl implements WeatherRepository {
+public class RandomWeatherRepositoryImpl implements WeatherRepository {
     private static final Map<City, String> weatherInCityData = new HashMap<>();
 
     @Override
