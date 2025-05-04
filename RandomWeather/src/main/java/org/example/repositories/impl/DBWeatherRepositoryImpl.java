@@ -47,18 +47,22 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
 
     @Override
     public void addCity(City city, String cityWeather) throws SQLException {
-        try (Connection connection = DriverManager.getConnection(url, user, password);
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "INSERT INTO city(name, weatherStatus) VALUES (?, ?)")) {
+        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            String sql = "INSERT INTO city(name, positionX, positionY, temperature, weatherStatus) VALUES (?, ?, ?, ?, ?)";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
-            preparedStatement.setString(1, city.getName()); // Значение для name (из переменной city.name)
-            preparedStatement.setString(2, cityWeather);    // Значение для weatherStatus
+                preparedStatement.setString(1, city.getName()); // Значение для name (из переменной city.name)
+                preparedStatement.setDouble(2, -100.0);    // Значение для positionX
+                preparedStatement.setDouble(3,  -100.0);    // Значение для positionY
+                preparedStatement.setInt(4, -100);    // Значение для temperature
+                preparedStatement.setString(5, cityWeather);    // Значение для weatherStatus
 
-            // запрос
-            int rowsInserted = preparedStatement.executeUpdate();
-        } catch (SQLException e) {
+                // запрос
+                preparedStatement.executeUpdate();
+            }
+        } /* catch (SQLException e) {
             throw new DatabaseInsertException();
-        }
+        } */
     }
     @Override
     public boolean containsCity(City city) throws SQLException {
@@ -76,7 +80,7 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
     public String getCityWeather(City city) throws SQLException {
         try (Connection connection = DriverManager.getConnection(url, user, password);
              PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT name FROM city WHERE name = ?")) {
+                     "SELECT weatherStatus FROM city WHERE name = ?")) {
             preparedStatement.setString(1, city.getName());
             ResultSet resultSet = preparedStatement.executeQuery();
             if (!resultSet.next()) throw new NoInfoAboutSuchCityException();
