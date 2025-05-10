@@ -12,6 +12,10 @@ class City {        // TwT
         name = terminalInput.nextLine();
         if (!this.checkName()) throw new WrongCityNameException();
     }
+    public void inputName(String input) {
+        name = input;
+        if (!this.checkName()) throw new WrongCityNameException();
+    }
     public String getName() {
         return name;
     }

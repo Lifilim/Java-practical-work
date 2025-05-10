@@ -23,8 +23,10 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
     private String user = "lim";
     private String password = "milmil";
 
+    //public int MAX_DB_SIZE = 100;
+
     @Override
-    public void connect() throws ClassNotFoundException, SQLException {
+    public void connect() {
         //Class.forName("org.postgresql.Driver");
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             Statement statement = connection.createStatement();
@@ -34,38 +36,45 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
             assert sqlInitial != null;
             String sql = new String(sqlInitial.readAllBytes(), StandardCharsets.UTF_8);
             statement.execute(sql);
-            System.out.println("подключились!");
+            System.out.println("База данный подключена!");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
     /*
-    public DBWeatherRepositoryImpl() throws SQLException, ClassNotFoundException {
-        this.connect();
-    }
      */
 
     @Override
-    public void addCity(City city, String cityWeather) throws SQLException {
+    public void initialize() {
+            this.connect();
+    };
+
+    @Override
+    public void addCity(City city, String cityWeather) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String sql = "INSERT INTO city(name, positionX, positionY, temperature, weatherStatus) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO city(name, weatherStatus) VALUES (?, ?)";
+            //String sql = "INSERT INTO city(name, positionX, positionY, temperature, weatherStatus) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
                 preparedStatement.setString(1, city.getName()); // Значение для name (из переменной city.name)
-                preparedStatement.setDouble(2, -100.0);    // Значение для positionX
-                preparedStatement.setDouble(3,  -100.0);    // Значение для positionY
-                preparedStatement.setInt(4, -100);    // Значение для temperature
-                preparedStatement.setString(5, cityWeather);    // Значение для weatherStatus
+                preparedStatement.setString(2, cityWeather);    // Значение для weatherStatus
+                //preparedStatement.setDouble(2, -100.0);    // Значение для positionX
+                //preparedStatement.setDouble(3,  -100.0);    // Значение для positionY
+                //preparedStatement.setInt(4, -100);    // Значение для temperature
 
                 // запрос
                 preparedStatement.executeUpdate();
             }
-        } /* catch (SQLException e) {
-            throw new DatabaseInsertException();
-        } */
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+            //throw new DatabaseInsertException();
+        }
     }
+
     @Override
-    public boolean containsCity(City city) throws SQLException {
+    public boolean containsCity(City city) {
         try (Connection connection = DriverManager.getConnection(url, user, password);
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT EXISTS(SELECT 1 FROM city WHERE name = ?)")) {
@@ -73,11 +82,13 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.next() && resultSet.getBoolean(1);
         } catch (SQLException e) {
-            throw new DatabaseSelectException();
+            throw new RuntimeException(e);
+            //throw new DatabaseSelectException();
         }
     }
+
     @Override
-    public String getCityWeather(City city) throws SQLException {
+    public String getWeather(City city) {
         try (Connection connection = DriverManager.getConnection(url, user, password);
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "SELECT weatherStatus FROM city WHERE name = ?")) {
@@ -86,7 +97,32 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
             if (!resultSet.next()) throw new NoInfoAboutSuchCityException();
             return resultSet.getString(1);
         } catch (SQLException e) {
-            throw new DatabaseSelectException();
+            throw new RuntimeException(e);
+            //throw new DatabaseSelectException();
+        }
+    }
+
+    @Override
+    public void clear() {
+        try (Connection connection = DriverManager.getConnection(url, user, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "TRUNCATE city")) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public int length() {
+        try (Connection connection = DriverManager.getConnection(url, user, password);
+             PreparedStatement preparedStatement = connection.prepareStatement(
+                     "SELECT COUNT(*) FROM city")) {
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (!resultSet.next()) throw new DatabaseSelectException();
+                return resultSet.getInt(1);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

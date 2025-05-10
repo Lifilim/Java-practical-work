@@ -41,6 +41,7 @@ public class Main {
                     System.out.println();
                 }
             }
+            //System.out.println("Программа завершена.");
         } catch (Exception e) {
             System.out.println("\u001B[3mКакая-то ошибка ¯\\_(ツ)_/¯\u001B[0m");
             System.out.println("\u001B[33m" + e.getMessage() + "\u001B[0m");

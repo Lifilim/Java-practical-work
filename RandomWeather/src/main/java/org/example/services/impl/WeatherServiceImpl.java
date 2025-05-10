@@ -19,12 +19,15 @@ public class WeatherServiceImpl implements WeatherService {
     private static final WeatherRepository weatherRepository = new DBWeatherRepositoryImpl();
     private static final TemperatureRepository temperatureService = new TemperatureRepositoryImpl();
 
+    public WeatherServiceImpl() {
+        weatherRepository.initialize();
+    }
     @Override
     public String getWeather(City city) throws SQLException {
         if (!weatherRepository.containsCity(city)) {
             int temperature = temperatureService.getTemperature();
             weatherRepository.addCity(city, Integer.toString(temperature) + "°C, " + weathers[random.nextInt(weathers.length)]);
         }
-        return weatherRepository.getCityWeather(city);
+        return weatherRepository.getWeather(city);
     }
 }

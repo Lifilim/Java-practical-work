@@ -11,6 +11,9 @@ public class RandomWeatherRepositoryImpl implements WeatherRepository {
     private static final Map<City, String> weatherInCityData = new HashMap<>();
 
     @Override
+    public void initialize() {};
+
+    @Override
     public boolean containsCity(City city) {
         return weatherInCityData.containsKey(city);
     }
@@ -21,7 +24,7 @@ public class RandomWeatherRepositoryImpl implements WeatherRepository {
     }
 
     @Override
-    public String getCityWeather(City city) {
+    public String getWeather(City city) {
         if (!containsCity(city)) throw new NoInfoAboutSuchCityException();
         return weatherInCityData.get(city);
     }
