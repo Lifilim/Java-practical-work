@@ -1,15 +1,18 @@
-package org.example;
+package org.example.domain;
 
 import org.example.exceptions.WrongCityNameException;
 
 import java.util.Objects;
 import java.util.Scanner;
 
-public
-class City {        // TwT
+public class City {
     private String name;
     public void inputName(Scanner terminalInput) {
         name = terminalInput.nextLine();
+        if (!this.checkName()) throw new WrongCityNameException();
+    }
+    public void inputName(String input) {
+        name = input;
         if (!this.checkName()) throw new WrongCityNameException();
     }
     public String getName() {

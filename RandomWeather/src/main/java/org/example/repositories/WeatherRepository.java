@@ -1,9 +1,9 @@
 package org.example.repositories;
 
-import org.example.City;
+import org.example.domain.City;
 
 public interface WeatherRepository {
     boolean containsCity(City city);
     void addCity(City city, String cityWeather);
-    String getCityWeather(City city);
+    String getWeather(City city);
 }

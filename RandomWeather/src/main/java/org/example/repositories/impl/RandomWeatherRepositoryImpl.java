@@ -1,13 +1,13 @@
 package org.example.repositories.impl;
 
-import org.example.City;
+import org.example.domain.City;
 import org.example.exceptions.NoInfoAboutSuchCityException;
 import org.example.repositories.WeatherRepository;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class WeatherRepositoryImpl implements WeatherRepository {
+public class RandomWeatherRepositoryImpl implements WeatherRepository {
     private static final Map<City, String> weatherInCityData = new HashMap<>();
 
     @Override
@@ -21,7 +21,7 @@ public class WeatherRepositoryImpl implements WeatherRepository {
     }
 
     @Override
-    public String getCityWeather(City city) {
+    public String getWeather(City city) {
         if (!containsCity(city)) throw new NoInfoAboutSuchCityException();
         return weatherInCityData.get(city);
     }
