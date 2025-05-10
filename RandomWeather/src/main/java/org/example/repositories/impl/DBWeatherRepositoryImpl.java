@@ -1,8 +1,7 @@
 package org.example.repositories.impl;
 
-import org.example.City;
+import org.example.domain.City;
 import org.example.Main;
-import org.example.exceptions.DatabaseInsertException;
 import org.example.exceptions.DatabaseSelectException;
 import org.example.exceptions.NoInfoAboutSuchCityException;
 import org.example.repositories.DBWeatherRepository;
@@ -23,11 +22,8 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
     private String user = "lim";
     private String password = "milmil";
 
-    //public int MAX_DB_SIZE = 100;
-
     @Override
     public void connect() {
-        //Class.forName("org.postgresql.Driver");
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             Statement statement = connection.createStatement();
             InputStream sqlInitial = Main.class
@@ -43,33 +39,25 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
             throw new RuntimeException(e);
         }
     }
-    /*
-     */
 
-    @Override
-    public void initialize() {
+    public DBWeatherRepositoryImpl() {
             this.connect();
-    };
+    }
 
     @Override
     public void addCity(City city, String cityWeather) {
         try (Connection connection = DriverManager.getConnection(url, user, password)) {
             String sql = "INSERT INTO city(name, weatherStatus) VALUES (?, ?)";
-            //String sql = "INSERT INTO city(name, positionX, positionY, temperature, weatherStatus) VALUES (?, ?, ?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
 
                 preparedStatement.setString(1, city.getName()); // Значение для name (из переменной city.name)
                 preparedStatement.setString(2, cityWeather);    // Значение для weatherStatus
-                //preparedStatement.setDouble(2, -100.0);    // Значение для positionX
-                //preparedStatement.setDouble(3,  -100.0);    // Значение для positionY
-                //preparedStatement.setInt(4, -100);    // Значение для temperature
 
                 // запрос
                 preparedStatement.executeUpdate();
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-            //throw new DatabaseInsertException();
         }
     }
 
@@ -83,7 +71,6 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
             return resultSet.next() && resultSet.getBoolean(1);
         } catch (SQLException e) {
             throw new RuntimeException(e);
-            //throw new DatabaseSelectException();
         }
     }
 
@@ -98,7 +85,6 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
             return resultSet.getString(1);
         } catch (SQLException e) {
             throw new RuntimeException(e);
-            //throw new DatabaseSelectException();
         }
     }
 
@@ -107,7 +93,7 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
         try (Connection connection = DriverManager.getConnection(url, user, password);
              PreparedStatement preparedStatement = connection.prepareStatement(
                      "TRUNCATE city")) {
-                ResultSet resultSet = preparedStatement.executeQuery();
+                preparedStatement.executeQuery();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
