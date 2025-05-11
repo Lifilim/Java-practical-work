@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.domain.City;
 import org.example.exceptions.NoInfoAboutSuchCityException;
 import org.example.exceptions.WrongCityNameException;
 
@@ -8,8 +9,12 @@ import org.example.services.impl.WeatherServiceImpl;
 
 import java.util.*;
 
+import java.sql.SQLException;
+
+
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+
         try (Scanner terminalInput = new Scanner(System.in)) {
             WeatherService weatherService = new WeatherServiceImpl();
             while (true) {
@@ -28,6 +33,7 @@ public class Main {
             }
         } catch (Exception e) {
             System.out.println("\u001B[3mКакая-то ошибка ¯\\_(ツ)_/¯\u001B[0m");
+            System.out.println("\u001B[33m" + e.getMessage() + "\u001B[0m");
         }
     }
 
