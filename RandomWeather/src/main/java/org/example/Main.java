@@ -21,11 +21,11 @@ import java.sql.SQLException;
 public class Main {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
         //SpringApplication.run(Main.class, args);
-
-        try (Scanner terminalInput = new Scanner(System.in)) {
             // Получаем контекст Spring
             ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
             //ApplicationContext context = new ClassPathXmlApplicationContext("jdbctemplate-developer-config.xml");
+
+        try (Scanner terminalInput = new Scanner(System.in)) {
 
             // Получаем бин WeatherService из контекста
             WeatherService weatherService = context.getBean(WeatherServiceImpl.class);
@@ -46,6 +46,7 @@ public class Main {
         } catch (Exception e) {
             System.out.println("\u001B[3mКакая-то ошибка ¯\\_(ツ)_/¯\u001B[0m");
             System.out.println("\u001B[33m" + e.getMessage() + "\u001B[0m");
+            SpringApplication.exit(context);
         }
     }
 

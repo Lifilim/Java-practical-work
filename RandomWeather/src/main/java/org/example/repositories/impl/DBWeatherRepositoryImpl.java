@@ -11,16 +11,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.util.List;
 
 @Repository
 public class DBWeatherRepositoryImpl implements DBWeatherRepository {
@@ -33,26 +23,16 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
                     rs.getString("name"),
                     rs.getString("weatherStatus")
             );
+    private final RowMapper<WeatherEntity> weatherStatusRowMapper = (rs, rowNum) ->
+            new WeatherEntity(null,
+                    null,
+                    rs.getString("weatherStatus")
+            );
 
 
     @Override
     public void connect() {
-            /*
-            Statement statement = connection.createStatement();
-            InputStream sqlInitial = Main.class
-                    .getClassLoader()
-                    .getResourceAsStream("sql/schema.sql");
-            assert sqlInitial != null;
-            String sql = new String(sqlInitial.readAllBytes(), StandardCharsets.UTF_8);
-            statement.execute(sql);
-            System.out.println("База данный подключена!");
-             */
     }
-    /*
-    public DBWeatherRepositoryImpl() {
-            this.connect();
-    }
-*/
     @Override
     public void addCity(City city, String cityWeather) {
         String sqlRequest = "INSERT INTO city(name, weatherStatus) VALUES (?, ?)";
@@ -70,13 +50,9 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
     public String getWeather(City city) {
         try {
             String sqlRequest = "SELECT weatherStatus FROM city WHERE name = ?";
-            //List<WeatherEntity> listResult = jdbcTemplate.query(sqlRequest, weatherRowMapper, city.getName());
-            WeatherEntity result = jdbcTemplate.queryForObject(sqlRequest, weatherRowMapper, city.getName());
-            if (result != null) throw new NoInfoAboutSuchCityException();
+            WeatherEntity result = jdbcTemplate.queryForObject(sqlRequest, weatherStatusRowMapper, city.getName());
+            if (result == null) throw new NoInfoAboutSuchCityException();
             return result.getWeatherStatus();
-            //if (listResult.isEmpty()) throw new NoInfoAboutSuchCityException();
-            //return listResult.iterator().next().getWeatherStatus();
-
         } catch (DatabaseSelectException e) {
             throw e;
         } catch (Exception e) {
