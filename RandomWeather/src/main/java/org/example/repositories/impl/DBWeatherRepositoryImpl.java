@@ -2,9 +2,14 @@ package org.example.repositories.impl;
 
 import org.example.domain.City;
 import org.example.Main;
+import org.example.entity.WeatherEntity;
 import org.example.exceptions.DatabaseSelectException;
 import org.example.exceptions.NoInfoAboutSuchCityException;
 import org.example.repositories.DBWeatherRepository;
+
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -15,16 +20,24 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.List;
 
-
+@Repository
 public class DBWeatherRepositoryImpl implements DBWeatherRepository {
-    private String url = "jdbc:postgresql://localhost:5432/weather";
-    private String user = "lim";
-    private String password = "milmil";
+    private JdbcTemplate jdbcTemplate;
+
+    public DBWeatherRepositoryImpl(JdbcTemplate jdbcTemplate) {this.jdbcTemplate = jdbcTemplate;};
+
+    private final RowMapper<WeatherEntity> weatherRowMapper= (rs, rowNum) ->
+            new WeatherEntity(rs.getLong("id"),
+                    rs.getString("name"),
+                    rs.getString("weatherStatus")
+            );
+
 
     @Override
     public void connect() {
-        try (Connection connection = DriverManager.getConnection(url, user, password)) {
+            /*
             Statement statement = connection.createStatement();
             InputStream sqlInitial = Main.class
                     .getClassLoader()
@@ -33,82 +46,51 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
             String sql = new String(sqlInitial.readAllBytes(), StandardCharsets.UTF_8);
             statement.execute(sql);
             System.out.println("База данный подключена!");
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+             */
     }
-
+    /*
     public DBWeatherRepositoryImpl() {
             this.connect();
     }
-
+*/
     @Override
     public void addCity(City city, String cityWeather) {
-        try (Connection connection = DriverManager.getConnection(url, user, password)) {
-            String sql = "INSERT INTO city(name, weatherStatus) VALUES (?, ?)";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-
-                preparedStatement.setString(1, city.getName()); // Значение для name (из переменной city.name)
-                preparedStatement.setString(2, cityWeather);    // Значение для weatherStatus
-
-                // запрос
-                preparedStatement.executeUpdate();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        String sqlRequest = "INSERT INTO city(name, weatherStatus) VALUES (?, ?)";
+        jdbcTemplate.update(sqlRequest, city.getName(), cityWeather);
     }
 
     @Override
     public boolean containsCity(City city) {
-        try (Connection connection = DriverManager.getConnection(url, user, password);
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT EXISTS(SELECT 1 FROM city WHERE name = ?)")) {
-            preparedStatement.setString(1, city.getName());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            return resultSet.next() && resultSet.getBoolean(1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        String sqlRequest = "SELECT EXISTS(SELECT 1 FROM city WHERE name = ?)";
+        //String sqlRequest = "SELECT EXISTS(SELECT 1 FROM CITY WHERE NAME = ? )";
+        return Boolean.TRUE.equals(jdbcTemplate.queryForObject(sqlRequest, Boolean.class, city.getName()));
     }
 
     @Override
     public String getWeather(City city) {
-        try (Connection connection = DriverManager.getConnection(url, user, password);
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT weatherStatus FROM city WHERE name = ?")) {
-            preparedStatement.setString(1, city.getName());
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (!resultSet.next()) throw new NoInfoAboutSuchCityException();
-            return resultSet.getString(1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        try {
+            String sqlRequest = "SELECT weatherStatus FROM city WHERE name = ?";
+            //List<WeatherEntity> listResult = jdbcTemplate.query(sqlRequest, weatherRowMapper, city.getName());
+            WeatherEntity result = jdbcTemplate.queryForObject(sqlRequest, weatherRowMapper, city.getName());
+            if (result != null) throw new NoInfoAboutSuchCityException();
+            return result.getWeatherStatus();
+            //if (listResult.isEmpty()) throw new NoInfoAboutSuchCityException();
+            //return listResult.iterator().next().getWeatherStatus();
+
+        } catch (DatabaseSelectException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new DatabaseSelectException(e);
         }
     }
 
     @Override
     public void clear() {
-        try (Connection connection = DriverManager.getConnection(url, user, password);
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "TRUNCATE city")) {
-                preparedStatement.executeQuery();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        jdbcTemplate.update("TRUNCATE city");
     }
 
     @Override
     public int length() {
-        try (Connection connection = DriverManager.getConnection(url, user, password);
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "SELECT COUNT(*) FROM city")) {
-                ResultSet resultSet = preparedStatement.executeQuery();
-                if (!resultSet.next()) throw new DatabaseSelectException();
-                return resultSet.getInt(1);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        return jdbcTemplate.query("SELECT COUNT(*) FROM city", weatherRowMapper).size();
     }
 }
