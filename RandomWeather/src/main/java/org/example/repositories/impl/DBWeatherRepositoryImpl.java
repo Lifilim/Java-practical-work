@@ -37,22 +37,8 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
 
     @Override
     public void connect() {
-            /*
-            Statement statement = connection.createStatement();
-            InputStream sqlInitial = Main.class
-                    .getClassLoader()
-                    .getResourceAsStream("sql/schema.sql");
-            assert sqlInitial != null;
-            String sql = new String(sqlInitial.readAllBytes(), StandardCharsets.UTF_8);
-            statement.execute(sql);
-            System.out.println("База данный подключена!");
-             */
     }
-    /*
-    public DBWeatherRepositoryImpl() {
-            this.connect();
-    }
-*/
+  
     @Override
     public void addCity(City city, String cityWeather) {
         String sqlRequest = "INSERT INTO city(name, weatherStatus) VALUES (?, ?)";
