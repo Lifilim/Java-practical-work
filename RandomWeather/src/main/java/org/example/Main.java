@@ -7,16 +7,28 @@ import org.example.exceptions.WrongCityNameException;
 import org.example.services.WeatherService;
 import org.example.services.impl.WeatherServiceImpl;
 
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import java.util.*;
 
 import java.sql.SQLException;
 
-
+@SpringBootApplication
 public class Main {
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
-
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
+            // Получаем контекст Spring
+            //ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
+            //ApplicationContext context = new ClassPathXmlApplicationContext("jdbctemplate-developer-config.xml");
+/*
         try (Scanner terminalInput = new Scanner(System.in)) {
-            WeatherService weatherService = new WeatherServiceImpl();
+
+            // Получаем бин WeatherService из контекста
+            WeatherService weatherService = context.getBean(WeatherServiceImpl.class);
             while (true) {
                 System.out.println("Введите название города:");
                 try {
@@ -34,7 +46,8 @@ public class Main {
         } catch (Exception e) {
             System.out.println("\u001B[3mКакая-то ошибка ¯\\_(ツ)_/¯\u001B[0m");
             System.out.println("\u001B[33m" + e.getMessage() + "\u001B[0m");
+            SpringApplication.exit(context);
         }
+*/
     }
-
 }
