@@ -1,21 +1,31 @@
 package org.example.entity;
 
+import org.example.domain.City;
+
 public class WeatherEntity {
     private Long id;
-    private String name;
+    private City city;
     private String weatherStatus;
+    private String date;
 
-    public WeatherEntity(Long id, String name, String weatherStatus) {
-        this.id = id;
-        this.name = name;
+    public WeatherEntity(City city, String weatherStatus) {
+        this.city = city;
         this.weatherStatus = weatherStatus;
+    }
+    public WeatherEntity(Long id, City city, String weatherStatus, String date) {
+        this.id = id;
+        this.city = city;
+        this.weatherStatus = weatherStatus;
+        this.date = date;
     }
 
     public Long getId() { return id; }
-    public String getName() { return name; }
+    public City getCity() { return city; }
     public String getWeatherStatus() { return weatherStatus; }
+    public String getDate() { return date; }
 
     public void setId(Long id) { this.id = id; }
-    public void setName(String name) { this.name = name; }
+    public void setName(City city) { this.city = city; }
     public void setWeatherStatus(String weatherStatus) { this.weatherStatus = weatherStatus; }
+    public void setDate(String weatherStatus) { this.date = date; }
 }

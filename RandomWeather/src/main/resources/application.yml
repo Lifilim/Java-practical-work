@@ -12,6 +12,14 @@ spring:
     name: Weather
   main:
     banner-mode: off
+  servlet:
+    context-path: /
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: mappings
 
 app:
   cred:

@@ -14,25 +14,24 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class DBWeatherRepositoryImpl implements DBWeatherRepository {
+    //================================================================================================================//
     private JdbcTemplate jdbcTemplate;
 
-    public DBWeatherRepositoryImpl(JdbcTemplate jdbcTemplate) {this.jdbcTemplate = jdbcTemplate;};
-
+    //================================================================================================================//
     private final RowMapper<WeatherEntity> weatherRowMapper= (rs, rowNum) ->
             new WeatherEntity(rs.getLong("id"),
-                    rs.getString("name"),
-                    rs.getString("weatherStatus")
+                    new City(rs.getString("name")),
+                    rs.getString("weatherStatus"), null
             );
     private final RowMapper<WeatherEntity> weatherStatusRowMapper = (rs, rowNum) ->
             new WeatherEntity(null,
                     null,
-                    rs.getString("weatherStatus")
+                    rs.getString("weatherStatus"), null
             );
 
+    //================================================================================================================//
+    public DBWeatherRepositoryImpl(JdbcTemplate jdbcTemplate) { this.jdbcTemplate = jdbcTemplate; };
 
-    @Override
-    public void connect() {
-    }
     @Override
     public void addCity(City city, String cityWeather) {
         String sqlRequest = "INSERT INTO city(name, weatherStatus) VALUES (?, ?)";
@@ -47,12 +46,12 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
     }
 
     @Override
-    public String getWeather(City city) {
+    public WeatherEntity getWeather(City city) {
         try {
             String sqlRequest = "SELECT weatherStatus FROM city WHERE name = ?";
             WeatherEntity result = jdbcTemplate.queryForObject(sqlRequest, weatherStatusRowMapper, city.getName());
             if (result == null) throw new NoInfoAboutSuchCityException();
-            return result.getWeatherStatus();
+            return result;
         } catch (DatabaseSelectException e) {
             throw e;
         } catch (Exception e) {

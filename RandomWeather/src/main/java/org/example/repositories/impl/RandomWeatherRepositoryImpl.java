@@ -1,6 +1,8 @@
 package org.example.repositories.impl;
 
 import org.example.domain.City;
+import org.example.dto.WeatherDto;
+import org.example.entity.WeatherEntity;
 import org.example.exceptions.NoInfoAboutSuchCityException;
 import org.example.repositories.WeatherRepository;
 
@@ -21,8 +23,8 @@ public class RandomWeatherRepositoryImpl implements WeatherRepository {
     }
 
     @Override
-    public String getWeather(City city) {
+    public WeatherEntity getWeather(City city) {
         if (!containsCity(city)) throw new NoInfoAboutSuchCityException();
-        return weatherInCityData.get(city);
+        return new WeatherEntity(city, weatherInCityData.get(city));
     }
 }

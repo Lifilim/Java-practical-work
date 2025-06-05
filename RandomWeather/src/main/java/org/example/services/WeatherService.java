@@ -1,7 +1,8 @@
 package org.example.services;
 
 import org.example.domain.City;
+import org.example.dto.WeatherDto;
 
 public interface WeatherService {
-    String getWeather(City city);
+    WeatherDto getWeather(City city);
 }

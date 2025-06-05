@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class WeatherMapper {
     public WeatherDto mapToDto(WeatherEntity weatherEntity) {
-        return new WeatherDto(weatherEntity.getId(), weatherEntity.getName(), weatherEntity.getWeatherStatus());
+        return new WeatherDto(weatherEntity.getId(), weatherEntity.getCity(), weatherEntity.getWeatherStatus(), weatherEntity.getDate());
     }
     public WeatherEntity mapToEntity(WeatherDto weatherDto) {
-        return new WeatherEntity(weatherDto.getId(), weatherDto.getName(), weatherDto.getWeatherStatus());
+        return new WeatherEntity(weatherDto.getId(), weatherDto.getCity(), weatherDto.getWeatherStatus(), weatherDto.getDate());
     }
 }

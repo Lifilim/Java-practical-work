@@ -19,12 +19,12 @@ import java.sql.SQLException;
 
 @SpringBootApplication
 public class Main {
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
-        //SpringApplication.run(Main.class, args);
+    public static void main(String[] args) {
+        SpringApplication.run(Main.class, args);
             // Получаем контекст Spring
-            ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
+            //ConfigurableApplicationContext context = SpringApplication.run(Main.class, args);
             //ApplicationContext context = new ClassPathXmlApplicationContext("jdbctemplate-developer-config.xml");
-
+/*
         try (Scanner terminalInput = new Scanner(System.in)) {
 
             // Получаем бин WeatherService из контекста
@@ -48,6 +48,6 @@ public class Main {
             System.out.println("\u001B[33m" + e.getMessage() + "\u001B[0m");
             SpringApplication.exit(context);
         }
+*/
     }
-
 }
