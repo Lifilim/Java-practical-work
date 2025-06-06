@@ -23,12 +23,6 @@ spring:
   servlet:
     context-path: /
 
-  flyway:
-    clean-disabled: false # Разрешить очистку
-    locations: classpath:sql
-    baseline-on-migrate: true
-    enabled: true
-
 ##############################################
 management:
   endpoints:

@@ -28,7 +28,8 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
     private final RowMapper<WeatherEntity> weatherStatusRowMapper = (rs, rowNum) ->
             new WeatherEntity(null,
                     null,
-                    rs.getString("weatherStatus"), null
+                    null,
+                    rs.getString("weatherStatus")
             );
 
     //================================================================================================================//
@@ -37,7 +38,7 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
     @Override
     public void addCity(City city, String dateValue, String cityWeather) {
         String sqlRequest = "INSERT INTO city(name, latitude, longitude, dateValue, weatherStatus) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sqlRequest, city.getName(), city.getLatitude(), city.getLongitude(), cityWeather);
+        jdbcTemplate.update(sqlRequest, city.getName(), city.getLatitude(), city.getLongitude(), dateValue, cityWeather);
     }
 
     @Override
@@ -53,6 +54,8 @@ public class DBWeatherRepositoryImpl implements DBWeatherRepository {
             WeatherEntity result = jdbcTemplate.queryForObject(sqlRequest, weatherStatusRowMapper, city.getName());
             if (result == null) throw new NoInfoAboutSuchCityException();
             return result;
+        } catch (NoInfoAboutSuchCityException e) {
+            throw e;
         } catch (DatabaseSelectException e) {
             throw e;
         } catch (Exception e) {

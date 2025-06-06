@@ -7,3 +7,9 @@ CREATE TABLE IF NOT EXISTS city(
     dateValue varchar(10),
     weatherStatus varchar(100)
 );
+
+CREATE TABLE IF NOT EXISTS city(
+    id SERIAL PRIMARY KEY,
+    name varchar(100) NOT NULL UNIQUE,
+    weatherStatus varchar(100)
+);

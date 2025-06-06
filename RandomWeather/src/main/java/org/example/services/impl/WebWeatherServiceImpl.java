@@ -49,6 +49,7 @@ public class WebWeatherServiceImpl implements WeatherService {
 
         WeatherDto result;
         if (!weatherRepository.containsCity(city)) {
+            weatherRepository.addCity(city, "2025-05-05", "rain");
             /*
             result = webClientProjecteol.get()
                 .uri(uriBuilder -> uriBuilder

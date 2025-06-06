@@ -17,12 +17,7 @@ public class WeatherController {
     public WeatherController(WeatherService weatherService) {
         this.weatherService = weatherService;
     }
-/*
-    @GetMapping("/weather/")
-    public WeatherDto getWeatherByCityName(@RequestParam  String cityName) {
-        return weatherService.getWeather(new City(cityName), null);
-    }
- */
+
     @GetMapping("/weather/")
     public WeatherDto getWeatherByCityName(@RequestParam  String cityName, @RequestParam String date) {
         return weatherService.getWeather(new City(cityName), date);
