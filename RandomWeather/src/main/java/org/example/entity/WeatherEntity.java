@@ -26,7 +26,7 @@ public class WeatherEntity {
     public String getDateValue() { return dateValue; }
 
     public void setId(Long id) { this.id = id; }
-    public void setName(City city) { this.city = city; }
+    public void setCity(City city) { this.city = city; }
     public void setWeatherStatus(String weatherStatus) { this.weatherStatus = weatherStatus; }
     public void setDateValue(String weatherStatus) { this.dateValue = dateValue; }
 }
