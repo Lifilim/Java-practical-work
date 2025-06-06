@@ -7,12 +7,18 @@ import java.util.Scanner;
 
 public class City {
     //================================================================================================================//
-    private String name;    // city's name
+    private String name;        // city's name
+    private String latitude;    // широта
+    private String longitude;   // долгота
 
     //================================================================================================================//
     public City() {}
     public City(String cityName) { inputName(cityName); }
-    
+    public City(String cityName, String latitude, String longitude) {
+        inputName(cityName);
+        inputСoordinates(latitude, longitude);
+    }
+
     public void inputName(Scanner terminalInput) {
         name = terminalInput.nextLine();
         if (!this.checkName()) throw new WrongCityNameException();
@@ -23,13 +29,18 @@ public class City {
         if (!this.checkName()) throw new WrongCityNameException();
     }
 
-    public String getName() {
-        return name;
+    public void inputСoordinates(String latitude, String longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public boolean checkName() {
         return name.matches("[а-яА-Я]+");
     }
+
+    public String getName() { return name; }
+    public String getLatitude() { return latitude; }
+    public String getLongitude() { return longitude; }
 
     //================================================================================================================//
     @Override

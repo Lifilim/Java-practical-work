@@ -30,11 +30,11 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     @Override
-    public WeatherDto getWeather(City city) {
+    public WeatherDto getWeather(City city, String dateValue) {
         if (!weatherRepository.containsCity(city)) {
             int temperature = temperatureService.getTemperature();
-            weatherRepository.addCity(city, Integer.toString(temperature) + "°C, " + weathers[random.nextInt(weathers.length)]);
+            weatherRepository.addCity(city, null, Integer.toString(temperature) + "°C, " + weathers[random.nextInt(weathers.length)]);
         }
-        return weatherMapper.mapToDto(weatherRepository.getWeather(city));
+        return weatherMapper.mapToDto(weatherRepository.getWeather(city, dateValue));
     }
 }

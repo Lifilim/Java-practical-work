@@ -6,26 +6,27 @@ public class WeatherEntity {
     private Long id;
     private City city;
     private String weatherStatus;
-    private String date;
+    private String dateValue;
 
-    public WeatherEntity(City city, String weatherStatus) {
+    public WeatherEntity(City city, String date, String weatherStatus) {
         this.city = city;
+        this.dateValue = date;
         this.weatherStatus = weatherStatus;
     }
-    public WeatherEntity(Long id, City city, String weatherStatus, String date) {
+    public WeatherEntity(Long id, City city, String date, String weatherStatus) {
         this.id = id;
         this.city = city;
+        this.dateValue = date;
         this.weatherStatus = weatherStatus;
-        this.date = date;
     }
 
     public Long getId() { return id; }
     public City getCity() { return city; }
     public String getWeatherStatus() { return weatherStatus; }
-    public String getDate() { return date; }
+    public String getDateValue() { return dateValue; }
 
     public void setId(Long id) { this.id = id; }
     public void setName(City city) { this.city = city; }
     public void setWeatherStatus(String weatherStatus) { this.weatherStatus = weatherStatus; }
-    public void setDate(String weatherStatus) { this.date = date; }
+    public void setDateValue(String weatherStatus) { this.dateValue = dateValue; }
 }

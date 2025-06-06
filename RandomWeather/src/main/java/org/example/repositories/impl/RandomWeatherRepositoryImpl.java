@@ -18,13 +18,13 @@ public class RandomWeatherRepositoryImpl implements WeatherRepository {
     }
 
     @Override
-    public void addCity(City city, String cityWeather) {
+    public void addCity(City city, String dateValue, String cityWeather) {
         weatherInCityData.put(city, cityWeather);
     }
 
     @Override
-    public WeatherEntity getWeather(City city) {
+    public WeatherEntity getWeather(City city, String date) {
         if (!containsCity(city)) throw new NoInfoAboutSuchCityException();
-        return new WeatherEntity(city, weatherInCityData.get(city));
+        return new WeatherEntity(city, date, weatherInCityData.get(city));
     }
 }
